@@ -226,7 +226,7 @@ public class MaterialEditText extends AppCompatEditText {
   /**
    * the floating label's focusFraction
    */
-  private float focusFraction;
+  private float focusFraction = 1f;
 
   /**
    * The font used for the accent texts (floating label, error/helper text, character counter, etc.)
@@ -405,7 +405,8 @@ public class MaterialEditText extends AppCompatEditText {
     iconLeftBitmaps = generateIconBitmaps(typedArray.getResourceId(R.styleable.MaterialEditText_met_iconLeft, -1));
     iconRightBitmaps = generateIconBitmaps(typedArray.getResourceId(R.styleable.MaterialEditText_met_iconRight, -1));
     showClearButton = typedArray.getBoolean(R.styleable.MaterialEditText_met_clearButton, false);
-    clearButtonBitmaps = generateIconBitmaps(R.drawable.met_ic_clear);
+    int clearButtonResource = typedArray.getResourceId(R.styleable.MaterialEditText_met_clearButtonSource, -1);
+    createClearButtonBitmaps(clearButtonResource);
     iconPadding = typedArray.getDimensionPixelSize(R.styleable.MaterialEditText_met_iconPadding, getPixel(16));
     floatingLabelAlwaysShown = typedArray.getBoolean(R.styleable.MaterialEditText_met_floatingLabelAlwaysShown, false);
     helperTextAlwaysShown = typedArray.getBoolean(R.styleable.MaterialEditText_met_helperTextAlwaysShown, false);
@@ -525,6 +526,14 @@ public class MaterialEditText extends AppCompatEditText {
   public void setShowClearButton(boolean show) {
     showClearButton = show;
     correctPaddings();
+  }
+
+  public void setClearDrawable(@DrawableRes int drawable) {
+    createClearButtonBitmaps(drawable);
+  }
+
+  private void createClearButtonBitmaps(int clearButtonResource) {
+    clearButtonBitmaps = generateIconBitmaps(clearButtonResource != -1 ? clearButtonResource : R.drawable.met_ic_clear);
   }
 
   private Bitmap[] generateIconBitmaps(@DrawableRes int origin) {
@@ -1103,7 +1112,8 @@ public class MaterialEditText extends AppCompatEditText {
 
   @Override
   public void setError(CharSequence errorText) {
-    tempErrorText = errorText == null ? null : errorText.toString();
+    tempErrorText = errorText == null ?
+            null : TextUtils.isEmpty(errorText.toString()) ? null : errorText.toString();
     if (adjustBottomLines()) {
       postInvalidate();
     }
@@ -1299,10 +1309,10 @@ public class MaterialEditText extends AppCompatEditText {
       } else {
         buttonLeft = endX - iconOuterWidth;
       }
-      Bitmap clearButtonBitmap = clearButtonBitmaps[0];
-      buttonLeft += (iconOuterWidth - clearButtonBitmap.getWidth()) / 2;
+      Bitmap clearButtonBitmap = clearButtonBitmaps[1];
+      buttonLeft += (iconOuterWidth - clearButtonBitmap.getWidth());
       int iconTop = lineStartY + bottomSpacing - iconOuterHeight + (iconOuterHeight - clearButtonBitmap.getHeight()) / 2;
-      canvas.drawBitmap(clearButtonBitmap, buttonLeft, iconTop, paint);
+      canvas.drawBitmap(clearButtonBitmap, buttonLeft, iconTop, null);
     }
 
     // draw the underline
@@ -1469,8 +1479,9 @@ public class MaterialEditText extends AppCompatEditText {
           if (insideClearButton(event)) {
             clearButtonTouched = true;
             clearButtonClicking = true;
+            return true;
           }
-          return true;
+          break;
         case MotionEvent.ACTION_MOVE:
           if (clearButtonClicking && !insideClearButton(event)) {
             clearButtonClicking = false;
