@@ -1332,7 +1332,7 @@ public class MaterialEditText extends AppCompatEditText {
         paint.setColor(primaryColor);
         canvas.drawRect(startX, lineStartY, endX, lineStartY + getPixel(2), paint);
       } else { // normal
-        paint.setColor(underlineColor != -1 ? underlineColor : baseColor & 0x00ffffff | 0x1E000000);
+        paint.setColor(underlineColor != -1 ? underlineColor : baseColor);
         canvas.drawRect(startX, lineStartY, endX, lineStartY + getPixel(1), paint);
       }
     }
