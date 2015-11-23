@@ -339,8 +339,9 @@ public class MaterialEditText extends AppCompatEditText {
     bottomSpacing = getResources().getDimensionPixelSize(R.dimen.inner_components_spacing);
     bottomEllipsisSize = getResources().getDimensionPixelSize(R.dimen.bottom_ellipsis_height);
 
-    // default baseColor is black
-    int defaultBaseColor = Color.BLACK;
+    TypedArray defaultArray = context.obtainStyledAttributes(new int[]{R.attr.colorControlNormal, R.attr.colorAccent});
+    int defaultBaseColor = defaultArray.getColor(0, 0);
+    defaultArray.recycle();
 
     TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialEditText);
     textColorStateList = typedArray.getColorStateList(R.styleable.MaterialEditText_met_textColor);
