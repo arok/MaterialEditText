@@ -982,7 +982,7 @@ public class MaterialEditText extends AppCompatEditText {
 
   private void resetHintTextColor() {
     if (textColorHintStateList == null) {
-      setHintTextColor(baseColor & 0x00ffffff | 0x44000000);
+      setHintTextColor(Color.BLACK & 0x00ffffff | 0x44000000);
     } else {
       setHintTextColor(textColorHintStateList);
     }
