@@ -5,13 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
@@ -19,19 +13,12 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
-import android.text.Editable;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.text.*;
 import android.text.method.TransformationMethod;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.rengwuxian.materialedittext.validation.METLengthChecker;
@@ -339,38 +326,15 @@ public class MaterialEditText extends AppCompatEditText {
     bottomSpacing = getResources().getDimensionPixelSize(R.dimen.inner_components_spacing);
     bottomEllipsisSize = getResources().getDimensionPixelSize(R.dimen.bottom_ellipsis_height);
 
-    TypedArray defaultArray = context.obtainStyledAttributes(new int[]{R.attr.colorControlNormal, R.attr.colorAccent});
-    int defaultBaseColor = defaultArray.getColor(0, 0);
+    TypedArray defaultArray = context.obtainStyledAttributes(new int[]{R.attr.colorControlNormal, R.attr.colorControlActivated});
+    int defaultBaseColor = defaultArray.getColor(0, Color.BLACK);
+    int defaultPrimaryColor = defaultArray.getColor(1, defaultBaseColor);
     defaultArray.recycle();
 
     TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialEditText);
     textColorStateList = typedArray.getColorStateList(R.styleable.MaterialEditText_met_textColor);
     textColorHintStateList = typedArray.getColorStateList(R.styleable.MaterialEditText_met_textColorHint);
     baseColor = typedArray.getColor(R.styleable.MaterialEditText_met_baseColor, defaultBaseColor);
-
-    // retrieve the default primaryColor
-    int defaultPrimaryColor;
-    TypedValue primaryColorTypedValue = new TypedValue();
-    try {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        context.getTheme().resolveAttribute(android.R.attr.colorPrimary, primaryColorTypedValue, true);
-        defaultPrimaryColor = primaryColorTypedValue.data;
-      } else {
-        throw new RuntimeException("SDK_INT less than LOLLIPOP");
-      }
-    } catch (Exception e) {
-      try {
-        int colorPrimaryId = getResources().getIdentifier("colorPrimary", "attr", getContext().getPackageName());
-        if (colorPrimaryId != 0) {
-          context.getTheme().resolveAttribute(colorPrimaryId, primaryColorTypedValue, true);
-          defaultPrimaryColor = primaryColorTypedValue.data;
-        } else {
-          throw new RuntimeException("colorPrimary not found");
-        }
-      } catch (Exception e1) {
-        defaultPrimaryColor = baseColor;
-      }
-    }
 
     primaryColor = typedArray.getColor(R.styleable.MaterialEditText_met_primaryColor, defaultPrimaryColor);
     setFloatingLabelInternal(typedArray.getInt(R.styleable.MaterialEditText_met_floatingLabel, 0));
