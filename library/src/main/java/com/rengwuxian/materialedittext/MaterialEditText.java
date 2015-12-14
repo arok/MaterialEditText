@@ -1287,7 +1287,7 @@ public class MaterialEditText extends AppCompatEditText {
         paint.setColor(errorColor);
         canvas.drawRect(startX, lineStartY, endX, lineStartY + getPixel(2), paint);
       } else if (!isEnabled()) { // disabled
-        paint.setColor(underlineColor != -1 ? underlineColor : baseColor & 0x00ffffff | 0x44000000);
+        paint.setColor(underlineColor != -1 ? underlineColor : baseColor & 0x00ffffff | 0x60000000);
         float interval = getPixel(1);
         for (float xOffset = 0; xOffset < getWidth(); xOffset += interval * 3) {
           canvas.drawRect(startX + xOffset, lineStartY, startX + xOffset + interval, lineStartY + getPixel(1), paint);
@@ -1296,7 +1296,7 @@ public class MaterialEditText extends AppCompatEditText {
         paint.setColor(primaryColor);
         canvas.drawRect(startX, lineStartY, endX, lineStartY + getPixel(2), paint);
       } else { // normal
-        paint.setColor(underlineColor != -1 ? underlineColor : baseColor);
+        paint.setColor(underlineColor != -1 ? underlineColor : baseColor & 0x00ffffff | 0x60000000);
         canvas.drawRect(startX, lineStartY, endX, lineStartY + getPixel(1), paint);
       }
     }
